@@ -15,8 +15,8 @@ int Socket::Connect() {
 	if (connect(sock,addr,sizeof(addr)) < 0) //make connection
 		return 1; //on error exit to state 1
 	if (Handshake())
-		return 1 //Handshake failed (connection is probably dead)
-	return 0
+		return 1; //Handshake failed (connection is probably dead)
+	return 0;
 	//TODO handle actual connection
 }
 
@@ -29,6 +29,6 @@ int Socket::Handshake() {
 	if (n < 0) 
 		error("ERROR reading from socket");
 	if(buffer!=PT_ACK)
-		return 1
+		return 1;
 	return 0
 }
