@@ -5,6 +5,9 @@ namespace IPC {
 	class Socket;
 public:
 	Connect();
+
+private:
+	Handshake();
 } 
 
 #endif 
