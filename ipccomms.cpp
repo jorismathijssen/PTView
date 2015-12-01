@@ -32,3 +32,17 @@ int Socket::Handshake() {
 		return 1;
 	return 0
 }
+
+int Socket::RequestData(char type=3) { //can request different types 
+	char buffer;
+	n = write(sock,PT_REQUEST_ALL,sizeof(char));//TODO actually implement different requests
+	if (n < 0) 
+		error("ERROR writing to socket");
+	n = read(sock,buffer,sizeof(char));
+	if (n < 0) 
+		error("ERROR reading from socket");
+	if(buffer!=PT_RESPONSE) 
+		return 1;//incorrect response, fail
+	//TODO handle incoming data
+	return 0
+}
