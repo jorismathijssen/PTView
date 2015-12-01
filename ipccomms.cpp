@@ -33,8 +33,9 @@ int Socket::Handshake() {
 	return 0
 }
 
-int Socket::RequestData(char type=3) { //can request different types 
+int Socket::RequestData(char type=3, int speed*, int batt*) { //can request different types 
 	char buffer;
+	char largebuffer[255];
 	n = write(sock,PT_REQUEST_ALL,sizeof(char));//TODO actually implement different requests
 	if (n < 0) 
 		error("ERROR writing to socket");
@@ -44,5 +45,11 @@ int Socket::RequestData(char type=3) { //can request different types
 	if(buffer!=PT_RESPONSE) 
 		return 1;//incorrect response, fail
 	//TODO handle incoming data
+	n = read(sock,largebuffer,8);
+	if (n < 0) 
+		error("ERROR reading from socket");
+	//HANDLE DATA
+	memcpy(batt, &buffer, 4);
+	memcpy(speed, &buffer+4, 4);
 	return 0
 }
