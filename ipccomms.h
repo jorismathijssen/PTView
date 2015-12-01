@@ -2,13 +2,14 @@
 #define IPCCOMMS_H
 
 namespace IPC {
-	class Socket;
+    class Socket {
 public:
-	Connect();
-	RequestData(char type, int speed*, int batt*);
+    int Connect();
+    int RequestData(char type, int * speed, int * batt);
 
 private:
-	Handshake();
+    int Handshake();
+    };
 } 
 
 #endif 

@@ -15,8 +15,13 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-private:
+public:
     Ui::MainWindow *ui;
+    void PlotAccuDemo();
+    void PlotSnelheidDemo();
+
+public slots:
 };
+
 
 #endif // MAINWINDOW_H
