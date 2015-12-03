@@ -4,21 +4,9 @@
 
 MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),ui(new Ui::MainWindow)
 {
-    IPC::Socket connection;
     ui->setupUi(this);
     this->setStyleSheet("QTabBar::tab { height: 85px; width: 50px; }");
     ui->lcdNumber_2->setNumDigits(3);
-    int speed;
-    int batt;
-    if(connection.Connect()==0){
-        connection.RequestData(3,& speed, & batt);
-        ui->textBrowser->setText(QString::number(speed) + " EN " + QString::number(batt));
-        ui->lcdNumber_2->display(speed);
-        ui->progressBar->setValue(batt);
-    }
-    else{
-        ui->textBrowser->setText("GODVER NIET CONNECTED" + QString::number(connection.Connect()));
-    }
     PlotSnelheidDemo();
     PlotAccuDemo();
 }
@@ -41,7 +29,6 @@ void MainWindow::PlotAccuDemo()
     ui->graph->yAxis->setAutoTickCount(9);
     ui->graph->xAxis->setAutoTickCount(9);
     ui->graph->replot();
-    ui->progressBar->setValue(40);
 }
 
 void MainWindow::PlotSnelheidDemo()

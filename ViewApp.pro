@@ -15,12 +15,14 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     qcustomplot.cpp \
-    ipccomms.cpp
+    ipccomms.cpp \
+    connectionthread.cpp
 
 HEADERS  += mainwindow.h \
     qcustomplot.h \
     ipccomms.h \
-    ipcproto.h
+    ipcproto.h \
+    connectionthread.h
 
 FORMS    += mainwindow.ui \
     mainwindow.ui
