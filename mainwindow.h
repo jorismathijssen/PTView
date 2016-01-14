@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "connectionthread.h"
 
 namespace Ui {
 class MainWindow;
@@ -14,6 +15,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    ConnectionThread *thread;
 
 public:
     Ui::MainWindow *ui;
@@ -21,6 +23,10 @@ public:
     void PlotSnelheidDemo();
 
 public slots:
+    void aButtonClicked();
+    void updateView();
+    void check();
+    void onDataChanged(int, int);
 };
 
 

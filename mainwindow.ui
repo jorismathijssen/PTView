@@ -888,7 +888,7 @@
     <property name="elideMode">
      <enum>Qt::ElideMiddle</enum>
     </property>
-    <widget class="QWidget" name="Speed">
+    <widget class="QWidget" name="Home">
      <attribute name="title">
       <string>Home</string>
      </attribute>
@@ -951,14 +951,43 @@
        <string>Snelheid:</string>
       </property>
      </widget>
-     <widget class="QTextBrowser" name="textBrowser">
+     <widget class="QPushButton" name="Unlock">
       <property name="geometry">
        <rect>
-        <x>70</x>
-        <y>60</y>
-        <width>331</width>
-        <height>192</height>
+        <x>140</x>
+        <y>110</y>
+        <width>131</width>
+        <height>51</height>
        </rect>
+      </property>
+      <property name="text">
+       <string>Unlock Device</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>60</y>
+        <width>181</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Hou de knop ingedrukt voor </string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_4">
+      <property name="geometry">
+       <rect>
+        <x>180</x>
+        <y>80</y>
+        <width>67</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>2 sec</string>
       </property>
      </widget>
     </widget>

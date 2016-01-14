@@ -4,6 +4,7 @@
 #include "ipcproto.h"
 #include <unistd.h>
 #include <error.h>
+#include <stdio.h>
 int sock;
 namespace IPC {
 
@@ -16,7 +17,10 @@ namespace IPC {
         addr.sun_family = AF_UNIX;
         strncpy(addr.sun_path, "/tmp/socket", sizeof(addr.sun_path)-1);
         //set socket address /tmp/socket
-        if (connect(sock,(struct sockaddr *) &addr,sizeof(addr)) < 0)  return 2;
+        if (connect(sock,(struct sockaddr *) &addr,sizeof(addr)) < 0)  {
+            perror("ERROR: ");
+            return 2;
+        }
         //on error exit to state 1
         if (Handshake()) return 3;
         //Handshake failed (connection is probably dead)

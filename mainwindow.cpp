@@ -1,14 +1,80 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "ipccomms.h"
+#include "connectionthread.h"
+#include <unistd.h>
+
+bool locked = true;
+QTimer *timer1;
+QTimer *timer2;
 
 MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->TabManager->setTabEnabled(1,false);
+    ui->TabManager->setTabEnabled(2,false);
+    ui->label_2->hide();
+    ui->label_3->hide();
+    ui->progressBar->hide();
+    ui->lcdNumber_2->hide();
+    connect(ui->Unlock,SIGNAL(pressed()),this,SLOT(aButtonClicked()));
+    timer1 = new QTimer(this);
+     connect(timer1, SIGNAL(timeout()), this, SLOT(check()));
+     timer2 = new QTimer(this);
+     connect(timer2, SIGNAL(timeout()), this, SLOT(updateView()));
+
     this->setStyleSheet("QTabBar::tab { height: 85px; width: 50px; }");
-    ui->lcdNumber_2->setNumDigits(3);
+    ui->lcdNumber_2->setNumDigits(4);
     PlotSnelheidDemo();
     PlotAccuDemo();
+}
+
+void MainWindow::aButtonClicked() {
+     timer1->start(1000);
+}
+
+void MainWindow::check(){
+    timer1->stop();
+    if(ui->Unlock->isDown()){
+        ui->label_4->setText("1 sec");
+         timer2->start(1000);
+    }
+}
+
+void MainWindow::updateView(){
+     if(ui->Unlock->isDown()){
+    ui->Unlock->hide();
+    ui->label->hide();
+    ui->label_4->hide();
+    ui->TabManager->setTabEnabled(1,true);
+    ui->TabManager->setTabEnabled(2,true);
+    ui->label_2->show();
+    ui->label_3->show();
+    ui->progressBar->show();
+    ui->lcdNumber_2->show();
+    char output[101];
+    output[100] = 0;
+    FILE *in;
+    in = popen("./prog", "r");
+    while(fgets(output, 100, in) != NULL) {
+        qDebug() << QString(output);
+    }
+    usleep(5000);
+    thread = new ConnectionThread(this);
+    qDebug("Voor connect");
+    connect(thread, SIGNAL(DataRecieved(int,int)), this, SLOT(onDataChanged(int,int)));
+    thread->start();
+    qDebug("Na connect");
+     }
+     else{
+         ui->label_4->setText("2 sec");
+        timer2->stop();
+     }
+}
+
+void MainWindow::onDataChanged(int speed, int batt){
+    ui->lcdNumber_2->display(speed);
+    ui->progressBar->setValue(batt);
 }
 
 void MainWindow::PlotAccuDemo()

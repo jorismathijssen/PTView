@@ -5,9 +5,14 @@
 
 class ConnectionThread :public QThread
 {
+    Q_OBJECT
 public:
-    ConnectionThread();
+    explicit ConnectionThread(QObject *parent = 0 );
     void run();
+    bool stop;
+
+signals:
+    void  DataRecieved(int, int);
 };
 
 #endif // CONNECTIONTHREAD_H
