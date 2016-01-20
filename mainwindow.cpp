@@ -7,6 +7,7 @@
 bool locked = true;
 QTimer *timer1;
 QTimer *timer2;
+double  xas = 0.0;
 
 MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),ui(new Ui::MainWindow)
 {
@@ -43,28 +44,22 @@ void MainWindow::check(){
 
 void MainWindow::updateView(){
      if(ui->Unlock->isDown()){
-    ui->Unlock->hide();
-    ui->label->hide();
-    ui->label_4->hide();
-    ui->TabManager->setTabEnabled(1,true);
-    ui->TabManager->setTabEnabled(2,true);
-    ui->label_2->show();
-    ui->label_3->show();
-    ui->progressBar->show();
-    ui->lcdNumber_2->show();
-    char output[101];
-    output[100] = 0;
-    FILE *in;
-    in = popen("./prog", "r");
-    while(fgets(output, 100, in) != NULL) {
-        qDebug() << QString(output);
-    }
-    usleep(5000);
-    thread = new ConnectionThread(this);
-    qDebug("Voor connect");
-    connect(thread, SIGNAL(DataRecieved(int,int)), this, SLOT(onDataChanged(int,int)));
-    thread->start();
-    qDebug("Na connect");
+        ui->Unlock->hide();
+        ui->label->hide();
+        ui->label_4->hide();
+        ui->TabManager->setTabEnabled(1,true);
+        ui->TabManager->setTabEnabled(2,true);
+        ui->label_2->show();
+        ui->label_3->show();
+        ui->progressBar->show();
+        ui->lcdNumber_2->show();
+        // FILE *in;
+        // in = popen("./prog", "r");
+        thread = new ConnectionThread(this);
+        qDebug("Voor connect");
+        connect(thread, SIGNAL(DataRecieved(int,int)), this, SLOT(onDataChanged(int,int)));
+        thread->start();
+        qDebug("Na connect");
      }
      else{
          ui->label_4->setText("2 sec");
@@ -75,17 +70,21 @@ void MainWindow::updateView(){
 void MainWindow::onDataChanged(int speed, int batt){
     ui->lcdNumber_2->display(speed);
     ui->progressBar->setValue(batt);
+     xas = xas+0.016666667;
+     ui->graph_2->xAxis->setRange(0, (int ) xas+2);
+     ui->graph_2->graph(0)->addData(xas, speed);
+     ui->graph_2->update();
+     ui->graph_2->replot();
+     ui->graph->xAxis->setRange(0, (int ) xas+2);
+     ui->graph->graph(0)->addData(xas, batt);
+     ui->graph->update();
+     ui->graph->replot();
 }
 
 void MainWindow::PlotAccuDemo()
 {
     //For plotting accu graph
     QVector<double> x(100), y(500);
-    for (int i=0; i<10; ++i)
-    {
-      x[i] = 0+i; //Lets fill the data
-      y[i] = 100-i;
-    }
     ui->graph->addGraph();
     ui->graph->graph(0)->setData(x, y);
     ui->graph->xAxis->setLabel("Tijd (min)");
@@ -100,18 +99,12 @@ void MainWindow::PlotAccuDemo()
 void MainWindow::PlotSnelheidDemo()
 {
     QVector<double> x(100), y(500);
-    for (int i=0; i<60; ++i)
-    {
-      x[i] = 0+i;
-      qsrand(time(NULL));
-      y[i] = 0 + qrand() % 9;
-    }
     ui->graph_2->addGraph();
     ui->graph_2->graph(0)->setData(x, y);
     ui->graph_2->xAxis->setLabel("Tijd (min)");
-    ui->graph_2->yAxis->setLabel("Snelheid (m/s)");
-    ui->graph_2->xAxis->setRange(0, 10);
-    ui->graph_2->yAxis->setRange(0, 10);
+    ui->graph_2->yAxis->setLabel("Motorspeed");
+    ui->graph_2->xAxis->setRange(0, 2);
+    ui->graph_2->yAxis->setRange(-20, 40);
     ui->graph_2->yAxis->setAutoTickCount(9);
     ui->graph_2->xAxis->setAutoTickCount(9);
     ui->graph_2->replot();

@@ -2,6 +2,10 @@
 #include <QtCore>
 #include <QDebug>
 #include "ipccomms.h"
+#include <unistd.h>
+
+
+IPC::Socket connection;
 
 ConnectionThread::ConnectionThread(QObject *parent)  :
     QThread(parent)
@@ -9,22 +13,20 @@ ConnectionThread::ConnectionThread(QObject *parent)  :
 
 }
 
-void ConnectionThread::run(){
-    IPC::Socket connection;
-    int speed = 137;
-    int batt = 69;
-    qDebug("BEFORE CONNECTION");
+void ConnectionThread::run() {
+    int speed = 0;
+    int batt = 0;
     int value = connection.Connect();
     if(value == 0){
         qDebug("Connection succes");
         while(true){
             connection.RequestData(3,&batt,&speed);
             emit DataRecieved(speed, batt);
-            this->msleep(800);
+            this->msleep(1000);
         }
-    }else{
+    }
+    else {
         qDebug("Connection failed");
-        qDebug() << value;
     }
 }
 
